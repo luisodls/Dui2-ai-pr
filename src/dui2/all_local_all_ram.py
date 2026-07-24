@@ -61,7 +61,7 @@ def main():
         msgBox.exec()
 
         dir_2_change = QFileDialog.getExistingDirectory(
-            caption = "Chose working directory"
+            caption = "Choose working directory"
         )
 
         if dir_2_change != '':
