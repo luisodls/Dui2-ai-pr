@@ -1,19 +1,10 @@
-import sys, json, os, logging, platform
+import sys, os, platform
 
 from dui2.shared_modules.format_utils import get_feedback_data
 feedback_data_list = get_feedback_data()
 
 from dui2.shared_modules.qt_libs import *
 
-from dui2.client.q_object import MainObject
-from dui2.client.init_firts import IniData
-from dui2.shared_modules import format_utils, all_local_gui_connector
-
-from dui2.server import multi_node
-from dui2.server.init_first import IniData as ServerIniData
-
-
-#logging.basicConfig(filename='run_dui2_all_local_all_ram.log', level=logging.DEBUG)
 
 def main():
     os.environ["QTWEBENGINE_CHROMIUM_FLAGS"] = "--no-sandbox"
@@ -31,6 +22,25 @@ def main():
     else:
         print("neither Linux or Windows")
 
+    app = QApplication(sys.argv)
+    ui_dir_path = os.path.dirname(os.path.abspath(__file__))
+    logo_path = ui_dir_path + os.sep + "client" + os.sep + "resources" \
+              + os.sep + "DIALS_Logo_smaller_centred.png"
+    pixmap = QPixmap(logo_path)
+    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    splash.showMessage("Starting DUI2...", Qt.AlignBottom | Qt.AlignCenter, Qt.white)
+    splash.show()
+    app.processEvents()  # this forces the splash to actually paint now
+
+    import json, logging
+
+    from dui2.client.q_object import MainObject
+    from dui2.client.init_firts import IniData
+    from dui2.shared_modules import format_utils, all_local_gui_connector
+
+    from dui2.server import multi_node
+    from dui2.server.init_first import IniData as ServerIniData
+
     par_def = (
         ("chdir", None),
         ("ask_for_dir", "false"),
@@ -43,11 +53,9 @@ def main():
         ("cloudrun_id", "xxxx-xxxx-xxxx-xxxx"),
     )
 
-
     init_param = format_utils.get_par(par_def, sys.argv[1:])
     data_init = IniData()
     data_init.set_data(par_def = par_def)
-    app = QApplication(sys.argv)
 
     if init_param["ask_for_dir"] == "false":
         print("Using same dir where Dui2 were invoked from as working dir")
@@ -58,10 +66,12 @@ def main():
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle("Starting DUI")
         msgBox.setText("Please choose a directory to save DUI data in.")
+        splash.finish(msgBox)  # closes splash once main window is shown
+
         msgBox.exec()
 
         dir_2_change = QFileDialog.getExistingDirectory(
-            caption = "Choose working directory"
+            caption = "Chose working directory"
         )
 
         if dir_2_change != '':
@@ -118,14 +128,6 @@ def main():
     tree_ini_path = init_param["limit_path"]
     if tree_ini_path == None:
         tree_ini_path = ""
-        '''
-        #TODO: consider the approach of the next 3 instructions instead
-        logging.info(
-            " using the dir from where the commad 'dui2_server_side' was invoqued"
-        )
-        from pathlib import Path
-        tree_ini_path = str(Path.cwd().parent)
-        '''
 
     try:
         with open("run_data") as json_file:
@@ -152,6 +154,9 @@ def main():
         parent = app, cmd_tree_runner = cmd_runner
     )
     m_obj = MainObject(parent = app, multi_runner = m_gui_obj)
-    sys.exit(app.exec_())
+
+    splash.finish(m_obj.window)  # closes splash once main window is shown
+
+    sys.exit(app.exec())
 
 
