@@ -26,12 +26,12 @@ def main():
     ui_dir_path = os.path.dirname(os.path.abspath(__file__))
     logo_path = ui_dir_path + os.sep + "client" + os.sep + "resources" \
               + os.sep + "DIALS_Logo_smaller_centred.png"
-    pixmap = QPixmap(logo_path)
-    splash = QSplashScreen(pixmap, Qt.WindowStaysOnTopHint)
+    logo_pixmap = QPixmap(logo_path)
+    splash = QSplashScreen(logo_pixmap, Qt.WindowStaysOnTopHint)
     splash.showMessage("Starting DUI2...", Qt.AlignBottom | Qt.AlignCenter, Qt.white)
     splash.show()
     app.processEvents()  # this forces the splash to actually paint now
-
+    app.setWindowIcon(logo_pixmap)
     import json, logging
 
     from dui2.client.q_object import MainObject
@@ -67,11 +67,10 @@ def main():
         msgBox.setWindowTitle("Starting DUI")
         msgBox.setText("Please choose a directory to save DUI data in.")
         splash.finish(msgBox)  # closes splash once main window is shown
-
         msgBox.exec()
 
         dir_2_change = QFileDialog.getExistingDirectory(
-            caption = "Chose working directory"
+            caption = "Choose working directory"
         )
 
         if dir_2_change != '':
