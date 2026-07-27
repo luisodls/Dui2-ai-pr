@@ -1,4 +1,4 @@
-import sys, os, platform
+import sys, os, platform, json, logging
 
 from dui2.shared_modules.format_utils import get_feedback_data
 feedback_data_list = get_feedback_data()
@@ -31,8 +31,7 @@ def main():
     splash.showMessage("Starting DUI2...", Qt.AlignBottom | Qt.AlignCenter, Qt.white)
     splash.show()
     app.processEvents()  # this forces the splash to actually paint now
-    app.setWindowIcon(logo_pixmap)
-    import json, logging
+    app.setWindowIcon(QIcon(logo_pixmap))
 
     from dui2.client.q_object import MainObject
     from dui2.client.init_firts import IniData
@@ -66,7 +65,7 @@ def main():
         msgBox.setIcon(QMessageBox.Information)
         msgBox.setWindowTitle("Starting DUI")
         msgBox.setText("Please choose a directory to save DUI data in.")
-        splash.finish(msgBox)  # closes splash once main window is shown
+        splash.finish(msgBox)  # closes splash once this dialog shows
         msgBox.exec()
 
         dir_2_change = QFileDialog.getExistingDirectory(
@@ -153,7 +152,6 @@ def main():
         parent = app, cmd_tree_runner = cmd_runner
     )
     m_obj = MainObject(parent = app, multi_runner = m_gui_obj)
-
     splash.finish(m_obj.window)  # closes splash once main window is shown
 
     sys.exit(app.exec())
