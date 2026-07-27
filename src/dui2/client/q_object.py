@@ -726,6 +726,7 @@ class MainObject(QObject):
         txt_exit += "Just launch Dui2 again and "
         txt_exit += "it will pickup just where it left off.  "
         msgBox.setText(txt_exit)
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.exec()
         logging.info("exit_triggered(QObject) ... 2")
         self.parent_app.exit()
@@ -761,6 +762,7 @@ class MainObject(QObject):
             full_txt += line_str + "<br>"
         full_txt += "</p>"
         msgBox.setText(full_txt)
+        msgBox.setIcon(QMessageBox.Information)
         msgBox.exec()
         logging.info("Pop feedback info (QObject) ... 2")
 
