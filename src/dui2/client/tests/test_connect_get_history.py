@@ -36,6 +36,13 @@ if __name__ == "__main__":
     }
     #'''
 
+    misspell_token = '''
+    full_cmd = {
+        "nod_lst":"", "cmd_str":["history"],
+        'tock': 'dummy_4_now'
+    }
+    #'''
+
     no_token_error = '''
     full_cmd = {
         "nod_lst":"", "cmd_str":["history"]

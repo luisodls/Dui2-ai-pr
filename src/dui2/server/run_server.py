@@ -45,7 +45,7 @@ def main(par_def = None, connection_out = None):
             url_dict = parse_qs(body_str)
 
             if "cmd_lst" not in url_dict or "token" not in url_dict:
-                print("\n request (POST) with wrong token or wrong command \n")
+                logging.info("\n request (POST) with wrong token or wrong command \n")
                 return
 
             tmp_cmd2lst = url_dict["cmd_lst"]
@@ -57,7 +57,7 @@ def main(par_def = None, connection_out = None):
                     self.end_headers()
 
                 except AttributeError:
-                    print(
+                    logging.info(
                         "Attribute Err catch," +
                         " not supposed send header info"
                     )
@@ -82,7 +82,7 @@ def main(par_def = None, connection_out = None):
                     nod_lst.append(int(inner_str))
 
             except KeyError:
-                print("no node number provided")
+                logging.info("no node number provided")
 
             cmd_dict = {"nod_lst":nod_lst,
                         "cmd_lst":cmd_lst}
@@ -137,51 +137,39 @@ def main(par_def = None, connection_out = None):
                 self.send_response(200)
 
             except AttributeError:
-                print(
-                    "Attribute Err catch, not supposed send header info #3"
-                )
+                logging.info("Attribute Err catch, not supposed send header info #3")
 
             url_path = self.path
             url_dict = parse_qs(urlparse(url_path).query)
-            try:
-                lst_wt_cmd =  url_dict["cmd_str"]
-                token_from_url = url_dict["token"][0]
-                if not run_local and token_from_url != token_from_cli:
-                    print("\n request (GET) with wrong token \n")
-                    return
 
-            except KeyError:
-                print(
-                    "no command or no token in GET request (Key Err Catch)"
-                )
+            if "cmd_str" not in url_dict or "token" not in url_dict:
+                logging.info("\n request (GET) with wrong token or wrong command \n")
+                return
+
+            lst_wt_cmd = url_dict["cmd_str"]
+            token_from_url = url_dict["token"][0]
+            if not run_local and token_from_url != token_from_cli:
                 try:
                     self.send_header('Content-type', 'text/plain')
                     self.end_headers()
 
                 except AttributeError:
-                    print(
-                        "Attribute Err catch, not supposed send header info #4"
-                    )
+                    logging.info("Attribute Err catch, not supposed send header info #4")
 
-                spit_out(
-                    str_out = 'no command in request (KeyError) ',
-                    req_obj = self, out_type = 'utf-8'
-                )
-                spit_out(
-                    str_out = '/*EOF*/', req_obj = self, out_type = 'utf-8'
-                )
+                spit_out(str_out = 'no command in request (KeyError) ', req_obj = self, out_type = 'utf-8')
+                spit_out(str_out = '/*EOF*/', req_obj = self, out_type = 'utf-8')
                 return
 
             nod_lst = []
             try:
                 for inner_str in url_dict["nod_lst"]:
                     nod_lst.append(int(inner_str))
-
             except KeyError:
                 logging.info("no node number provided")
 
-            cmd_dict = {"nod_lst":nod_lst,
-                        "lst_wt_cmd":lst_wt_cmd}
+            cmd_dict = {"nod_lst":nod_lst, "lst_wt_cmd":lst_wt_cmd}
+            # rest of the method (run_get_data etc.) unchanged
+
             try:
                 lst_out = cmd_tree_runner.run_get_data(cmd_dict)
 
@@ -258,7 +246,7 @@ def main(par_def = None, connection_out = None):
                 log_full_str = self.address_string() + " => " + \
                                self.log_date_time_string() + "  " + str(args)
 
-                print(log_full_str)
+                logging.info(log_full_str)
                 return
 
     ################################################ PROPER MAIN
