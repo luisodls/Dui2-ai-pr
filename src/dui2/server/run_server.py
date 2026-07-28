@@ -44,23 +44,20 @@ def main(par_def = None, connection_out = None):
             body_str = str(post_body.decode('utf-8'))
             url_dict = parse_qs(body_str)
 
-            try:
-                tmp_cmd2lst = url_dict["cmd_lst"]
-                token_from_url = url_dict["token"][0]
-                if not run_local and token_from_url != token_from_cli:
-                    print("\n request (POST) with wrong token \n")
-                    return
+            if "cmd_lst" not in url_dict or "token" not in url_dict:
+                print("\n request (POST) with wrong token or wrong command \n")
+                return
 
-            except KeyError:
-                logging.info(
-                    "no command or no token in POST request (Key Err Catch)"
-                )
+            tmp_cmd2lst = url_dict["cmd_lst"]
+            token_from_url = url_dict["token"][0]
+            if not run_local and token_from_url != token_from_cli:
+
                 try:
                     self.send_header('Content-type', 'text/plain')
                     self.end_headers()
 
                 except AttributeError:
-                    logging.info(
+                    print(
                         "Attribute Err catch," +
                         " not supposed send header info"
                     )
@@ -85,7 +82,7 @@ def main(par_def = None, connection_out = None):
                     nod_lst.append(int(inner_str))
 
             except KeyError:
-                logging.info("no node number provided")
+                print("no node number provided")
 
             cmd_dict = {"nod_lst":nod_lst,
                         "cmd_lst":cmd_lst}
@@ -136,12 +133,11 @@ def main(par_def = None, connection_out = None):
                     )
 
         def do_GET(self):
-
             try:
                 self.send_response(200)
 
             except AttributeError:
-                logging.info(
+                print(
                     "Attribute Err catch, not supposed send header info #3"
                 )
 
@@ -155,7 +151,7 @@ def main(par_def = None, connection_out = None):
                     return
 
             except KeyError:
-                logging.info(
+                print(
                     "no command or no token in GET request (Key Err Catch)"
                 )
                 try:
@@ -163,7 +159,7 @@ def main(par_def = None, connection_out = None):
                     self.end_headers()
 
                 except AttributeError:
-                    logging.info(
+                    print(
                         "Attribute Err catch, not supposed send header info #4"
                     )
 
