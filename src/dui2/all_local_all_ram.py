@@ -154,6 +154,7 @@ def main():
     m_obj = MainObject(parent = app, multi_runner = m_gui_obj)
     splash.finish(m_obj.window)  # closes splash once main window is shown
 
-    sys.exit(app.exec())
+    print("running ...exec_")
+    sys.exit(app.exec_())
 
 
