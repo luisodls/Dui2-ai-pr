@@ -45,12 +45,13 @@ def main(par_def = None, connection_out = None):
             url_dict = parse_qs(body_str)
 
             if "cmd_lst" not in url_dict or "token" not in url_dict:
-                logging.info("\n request (POST) with wrong token or wrong command \n")
+                logging.info("request (POST) without token or command")
                 return
 
             tmp_cmd2lst = url_dict["cmd_lst"]
             token_from_url = url_dict["token"][0]
             if not run_local and token_from_url != token_from_cli:
+                logging.info("request (POST) with wrong token")
 
                 try:
                     self.send_header('Content-type', 'text/plain')
