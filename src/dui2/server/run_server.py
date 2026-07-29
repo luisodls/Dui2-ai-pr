@@ -94,7 +94,6 @@ def main(par_def = None, connection_out = None):
                     if "dials" in single_str:
                         found_dials_command = True
 
-
             if found_dials_command:
                 try:
                     cmd_tree_runner.run_dials_command(cmd_dict, self)
@@ -238,7 +237,7 @@ def main(par_def = None, connection_out = None):
                     "ConnectionReset err catch  ** while sending EOF or JSON"
                 )
 
-            logging.info("\n do_GET ... done ")
+            logging.info("do_GET ... done ")
 
         def log_message(self, format, *args):
             if run_local:

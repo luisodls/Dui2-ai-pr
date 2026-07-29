@@ -50,9 +50,7 @@ if __name__ == "__main__":
 
         #'''
 
-
         #full_cmd = {'nod_lst': [4], 'cmd_lst': ['run_predict_n_report'], 'token': 'dummy_4_now'}
-
 
         req_post = requests.post(uni_url, stream = True, data = full_cmd)
         while True:

@@ -29,6 +29,7 @@ uni_url = 'http://127.0.0.1:45678/'
 #uni_url = 'http://supercomputo.cimav.edu.mx:45678/'
 
 if __name__ == "__main__":
+
     #correct = '''
     full_cmd = {
         "nod_lst":"", "cmd_str":["history"],
@@ -55,8 +56,6 @@ if __name__ == "__main__":
         'token': 'dummy_4_nowww'
     }
     #'''
-
-
 
     req_get = requests.get(uni_url, stream = True, params = full_cmd)
     print("\n url =\n", req_get.url, "\n")
