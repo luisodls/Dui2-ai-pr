@@ -143,12 +143,13 @@ def main(par_def = None, connection_out = None):
             url_dict = parse_qs(urlparse(url_path).query)
 
             if "cmd_str" not in url_dict or "token" not in url_dict:
-                logging.info("\n request (GET) with wrong token or wrong command \n")
+                logging.info("request (GET) without token or command")
                 return
 
             lst_wt_cmd = url_dict["cmd_str"]
             token_from_url = url_dict["token"][0]
             if not run_local and token_from_url != token_from_cli:
+                logging.info("request (GET) with wrong token")
                 try:
                     self.send_header('Content-type', 'text/plain')
                     self.end_headers()
