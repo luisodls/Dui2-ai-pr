@@ -1669,5 +1669,12 @@ def main(par_def = None):
     uni_url = data_init.get_url()
     app = QApplication(sys.argv)
     m_obj = MainImgViewObject(parent = app)
-    sys.exit(app.exec_())
+
+    if hasattr(app, "exec"):
+        sys.exit(app.exec())
+
+    else:
+        sys.exit(app.exec_())
+
+
 
