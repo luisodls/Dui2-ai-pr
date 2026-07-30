@@ -22,7 +22,6 @@ copyright (c) CCP4 - DLS
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import json
-import sys
 import os, logging
 
 try:
@@ -335,14 +334,29 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    import sys, platform
+
+    if platform.system() == "Windows":
+        print("running on Windows")
+
+    elif platform.system() == "Linux":
+        print("running on Linux")
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
+        os.environ["WAYLAND_DISPLAY"] = ""
+
+    else:
+        print("nether Linux or Windows")
+
     app = QApplication(sys.argv)
     myWidget = MainWindow()
     myWidget.show()
 
     if hasattr(app, "exec"):
+        print("\n using exec \n")
         app.exec()
 
     else:
+        print("\n using exec_ \n")
         app.exec_()
 
 
