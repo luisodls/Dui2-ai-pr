@@ -3,6 +3,7 @@ import logging
 from dui2.shared_modules.qt_libs import *
 
 from dui2.shared_modules import all_local_server, format_utils
+from dui2.client.init_firts import IniData
 
 class ConnectGetThread(QThread):
     def __init__(self, handler, cmd_in, obj_out):
@@ -10,6 +11,7 @@ class ConnectGetThread(QThread):
         self.my_handler = handler
         self.my_cmd = cmd_in
         self.my_caller = obj_out
+        IniData().register_thread(self)
 
     def run(self):
         self.my_handler.fake_get(
@@ -30,6 +32,7 @@ class ConnectPostThread(QThread):
         self.my_cmd = cmd_in
         self.my_caller = obj_out
         logging.info("my_cmd(ConnectPostThread)=" + str(self.my_cmd))
+        IniData().register_thread(self)
 
     def run(self):
         self.my_handler.fake_post(
