@@ -27,6 +27,7 @@ import os, logging, platform
 from dui2.shared_modules.qt_libs import *
 
 from dui2.client.exec_utils import get_req_json_dat
+from dui2.client.init_firts import IniData
 
 def get_number_from_string(dict_in):
     str_in = dict_in['name']
@@ -218,6 +219,7 @@ class ReqDirList(QThread):
         super(ReqDirList, self).__init__()
         self.my_handler = my_handler
         self.show_hidden = show_hidden
+        IniData().register_thread(self)
 
         system = platform.system()
         if system == "Windows":
