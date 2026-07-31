@@ -380,7 +380,7 @@ class PostRequestWithOutput(QThread):
         self.my_handler = main_handler
         self.number = None
         self.do_predict_n_report = do_pred_n_rept
-        data_init.register_thread(self)
+        #data_init.register_thread(self)
 
     def run(self):
         if self.my_handler == None:

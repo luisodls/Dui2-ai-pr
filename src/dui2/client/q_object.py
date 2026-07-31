@@ -739,6 +739,9 @@ class MainObject(QObject):
             params_in = cmd, main_handler = self.runner_handler
         )
         resp = lst_req.result_out()
+
+        self.quit_kill_all_threads()
+
         self.do_image_view.quit_kill_all()
         IniData().quit_kill_all_threads()
         print(" end Quit ...")
@@ -1720,4 +1723,25 @@ class MainObject(QObject):
         else:
             self.refresh_output()
 
+
+    def quit_kill_all_threads(self, timeout_ms = 1200):
+        for thread in list(self.thrd_lst):
+            try:
+                if thread.isRunning():
+                    thread.requestInterruption()
+                    thread.quit()
+                    print("just killed:", thread)
+                    if not thread.wait(timeout_ms):
+                        print(
+                            "Thread: " + str(thread) +
+                            " did not exit gracefully, terminating"
+                        )
+                        thread.terminate()
+                        thread.wait()
+
+            except RuntimeError:
+                # underlying C++ QThread object already deleted
+                print("Thread already deleted (IniData sweep)")
+
+        self.thrd_lst = []
 
