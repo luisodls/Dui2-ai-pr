@@ -114,6 +114,7 @@ class IniData(object):
 
     def register_thread(self, thread):
         global active_threads
+        print("\n adding thread:", thread, "\n")
         active_threads.append(thread)
         thread.finished.connect(lambda: self._forget_thread(thread))
 
