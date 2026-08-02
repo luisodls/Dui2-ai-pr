@@ -154,10 +154,4 @@ def main():
     m_obj = MainObject(parent = app, multi_runner = m_gui_obj)
     splash.finish(m_obj.window)  # closes splash once main window is shown
 
-    if hasattr(app, "exec"):
-        sys.exit(app.exec())
-
-    else:
-        sys.exit(app.exec_())
-
-
+    run_qapp(app)

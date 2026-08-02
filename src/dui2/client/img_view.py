@@ -1670,11 +1670,5 @@ def main(par_def = None):
     app = QApplication(sys.argv)
     m_obj = MainImgViewObject(parent = app)
 
-    if hasattr(app, "exec"):
-        sys.exit(app.exec())
-
-    else:
-        sys.exit(app.exec_())
-
-
+    run_qapp(app)
 
