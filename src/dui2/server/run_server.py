@@ -64,7 +64,7 @@ def main(par_def = None, connection_out = None):
                     )
 
                 spit_out(
-                    str_out = 'no command in request (Key err catch ) ',
+                    str_out = 'rejected: invalid token',
                     req_obj = self, out_type = 'utf-8'
                 )
                 spit_out(
@@ -157,7 +157,7 @@ def main(par_def = None, connection_out = None):
                 except AttributeError:
                     logging.info("Attribute Err catch, not supposed send header info #4")
 
-                spit_out(str_out = 'no command in request (KeyError) ', req_obj = self, out_type = 'utf-8')
+                spit_out(str_out = 'rejected: invalid token', req_obj = self, out_type = 'utf-8')
                 spit_out(str_out = '/*EOF*/', req_obj = self, out_type = 'utf-8')
                 return
 
@@ -169,7 +169,6 @@ def main(par_def = None, connection_out = None):
                 logging.info("no node number provided")
 
             cmd_dict = {"nod_lst":nod_lst, "lst_wt_cmd":lst_wt_cmd}
-            # rest of the method (run_get_data etc.) unchanged
 
             try:
                 lst_out = cmd_tree_runner.run_get_data(cmd_dict)

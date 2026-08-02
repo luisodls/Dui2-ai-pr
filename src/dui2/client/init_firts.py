@@ -114,7 +114,6 @@ class IniData(object):
 
     def register_thread(self, thread):
         global active_threads
-        print("\n adding thread:", thread, "\n")
         active_threads.append(thread)
         thread.finished.connect(lambda: self._forget_thread(thread))
 
@@ -132,9 +131,8 @@ class IniData(object):
                 if thread.isRunning():
                     thread.requestInterruption()
                     thread.quit()
-                    print("just killed:", thread)
                     if not thread.wait(timeout_ms):
-                        print(
+                        logging.info(
                             "Thread: " + str(thread) +
                             " did not exit gracefully, terminating"
                         )
@@ -143,7 +141,7 @@ class IniData(object):
 
             except RuntimeError:
                 # underlying C++ QThread object already deleted
-                print("Thread already deleted (IniData sweep)")
+                logging.info("Thread already deleted (IniData sweep)")
 
         active_threads = []
 

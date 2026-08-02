@@ -76,7 +76,7 @@ def main():
             print("Using ", dir_2_change, " as working dir")
 
         else:
-            print("Canceled Operation")
+            print("Canceled Dir selection")
             dir_2_change = os.getcwd()
             #TODO consider interrupting here with the next t line
             #sys.exit(1)
