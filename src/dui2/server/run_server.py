@@ -44,17 +44,15 @@ def main(par_def = None, connection_out = None):
             body_str = str(post_body.decode('utf-8'))
             url_dict = parse_qs(body_str)
 
-            try:
-                tmp_cmd2lst = url_dict["cmd_lst"]
-                token_from_url = url_dict["token"][0]
-                if not run_local and token_from_url != token_from_cli:
-                    print("\n request (POST) with wrong token \n")
-                    return
+            if "cmd_lst" not in url_dict or "token" not in url_dict:
+                logging.info("request (POST) without token or command")
+                return
 
-            except KeyError:
-                logging.info(
-                    "no command or no token in POST request (Key Err Catch)"
-                )
+            tmp_cmd2lst = url_dict["cmd_lst"]
+            token_from_url = url_dict["token"][0]
+            if not run_local and token_from_url != token_from_cli:
+                logging.info("request (POST) with wrong token")
+
                 try:
                     self.send_header('Content-type', 'text/plain')
                     self.end_headers()
@@ -66,7 +64,7 @@ def main(par_def = None, connection_out = None):
                     )
 
                 spit_out(
-                    str_out = 'no command in request (Key err catch ) ',
+                    str_out = 'rejected: invalid token',
                     req_obj = self, out_type = 'utf-8'
                 )
                 spit_out(
@@ -95,7 +93,6 @@ def main(par_def = None, connection_out = None):
                 for single_str in inner_lst:
                     if "dials" in single_str:
                         found_dials_command = True
-
 
             if found_dials_command:
                 try:
@@ -136,56 +133,43 @@ def main(par_def = None, connection_out = None):
                     )
 
         def do_GET(self):
-
             try:
                 self.send_response(200)
 
             except AttributeError:
-                logging.info(
-                    "Attribute Err catch, not supposed send header info #3"
-                )
+                logging.info("Attribute Err catch, not supposed send header info #3")
 
             url_path = self.path
             url_dict = parse_qs(urlparse(url_path).query)
-            try:
-                lst_wt_cmd =  url_dict["cmd_str"]
-                token_from_url = url_dict["token"][0]
-                if not run_local and token_from_url != token_from_cli:
-                    print("\n request (GET) with wrong token \n")
-                    return
 
-            except KeyError:
-                logging.info(
-                    "no command or no token in GET request (Key Err Catch)"
-                )
+            if "cmd_str" not in url_dict or "token" not in url_dict:
+                logging.info("request (GET) without token or command")
+                return
+
+            lst_wt_cmd = url_dict["cmd_str"]
+            token_from_url = url_dict["token"][0]
+            if not run_local and token_from_url != token_from_cli:
+                logging.info("request (GET) with wrong token")
                 try:
                     self.send_header('Content-type', 'text/plain')
                     self.end_headers()
 
                 except AttributeError:
-                    logging.info(
-                        "Attribute Err catch, not supposed send header info #4"
-                    )
+                    logging.info("Attribute Err catch, not supposed send header info #4")
 
-                spit_out(
-                    str_out = 'no command in request (KeyError) ',
-                    req_obj = self, out_type = 'utf-8'
-                )
-                spit_out(
-                    str_out = '/*EOF*/', req_obj = self, out_type = 'utf-8'
-                )
+                spit_out(str_out = 'rejected: invalid token', req_obj = self, out_type = 'utf-8')
+                spit_out(str_out = '/*EOF*/', req_obj = self, out_type = 'utf-8')
                 return
 
             nod_lst = []
             try:
                 for inner_str in url_dict["nod_lst"]:
                     nod_lst.append(int(inner_str))
-
             except KeyError:
                 logging.info("no node number provided")
 
-            cmd_dict = {"nod_lst":nod_lst,
-                        "lst_wt_cmd":lst_wt_cmd}
+            cmd_dict = {"nod_lst":nod_lst, "lst_wt_cmd":lst_wt_cmd}
+
             try:
                 lst_out = cmd_tree_runner.run_get_data(cmd_dict)
 
@@ -252,7 +236,7 @@ def main(par_def = None, connection_out = None):
                     "ConnectionReset err catch  ** while sending EOF or JSON"
                 )
 
-            logging.info("\n do_GET ... done ")
+            logging.info("do_GET ... done ")
 
         def log_message(self, format, *args):
             if run_local:
@@ -262,7 +246,7 @@ def main(par_def = None, connection_out = None):
                 log_full_str = self.address_string() + " => " + \
                                self.log_date_time_string() + "  " + str(args)
 
-                print(log_full_str)
+                logging.info(log_full_str)
                 return
 
     ################################################ PROPER MAIN

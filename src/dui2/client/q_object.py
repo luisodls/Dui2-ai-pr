@@ -740,6 +740,7 @@ class MainObject(QObject):
         )
         resp = lst_req.result_out()
         self.do_image_view.quit_kill_all()
+        IniData().quit_kill_all_threads()
         print(" end Quit ...")
         feedback_data_list = get_feedback_data()
 

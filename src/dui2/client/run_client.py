@@ -75,5 +75,6 @@ def main(par_def = None):
 
     app = QApplication(sys.argv)
     m_obj = MainObject(parent = app)
-    sys.exit(app.exec_())
+
+    run_qapp(app)
 

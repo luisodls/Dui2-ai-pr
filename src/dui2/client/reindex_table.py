@@ -22,10 +22,16 @@ copyright (c) CCP4 - DLS
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 import json
-import sys
 import os, logging
 
-from dui2.shared_modules.qt_libs import *
+try:
+    from dui2.shared_modules.qt_libs import *
+
+except ModuleNotFoundError:
+    # in case of non ccp4-python available
+    from PySide6.QtCore import *
+    from PySide6.QtWidgets import *
+    from PySide6.QtGui import *
 
 def choice_if_decimal(num_in):
     str_f = "{:6.2f}".format(num_in)
@@ -299,11 +305,11 @@ class MainWindow(QMainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
 
-        #full_json_path = "/home/lui-temp/xrd_data/tst_area/run4/bravais_summary.json"
-        #full_log_path = "/home/lui-temp/xrd_data/tst_area/run4/out.log"
+        full_json_path = "/tmp/tst4img/bravais_summary.json"
+        full_log_path = "/tmp/tst4img/dials.refine_bravais_settings.log"
 
-        full_json_path = "/tmp/run6/bravais_summary.json"
-        full_log_path = "/tmp/run6/out.log"
+        '''full_json_path = "/tmp/run6/bravais_summary.json"
+        full_log_path = "/tmp/run6/out.log"'''
 
         with open(full_json_path) as json_file:
             json_data = json.load(json_file)
@@ -328,11 +334,30 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    import sys, platform
+
+    if platform.system() == "Windows":
+        print("running on Windows")
+
+    elif platform.system() == "Linux":
+        print("running on Linux")
+        os.environ["QT_QPA_PLATFORM"] = "xcb"
+        os.environ["WAYLAND_DISPLAY"] = ""
+
+    else:
+        print("nether Linux or Windows")
+
     app = QApplication(sys.argv)
     myWidget = MainWindow()
     myWidget.show()
-    app.exec_()
 
+    if hasattr(app, "exec"):
+        print("\n using exec \n")
+        app.exec()
+
+    else:
+        print("\n using exec_ \n")
+        app.exec_()
 
 
 

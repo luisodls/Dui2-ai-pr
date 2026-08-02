@@ -157,6 +157,7 @@ class GetRequestRealTime(QThread):
         self.token = data_init.get_token()
         self.params = params_in
         self.my_handler = main_handler
+        data_init.register_thread(self)
         logging.info("params_in(GetRequestRealTime) got here" + str(params_in))
 
     def run(self):
@@ -299,6 +300,7 @@ class MtzDataRequest(QThread):
         super(MtzDataRequest, self).__init__()
         self.cmd = cmd
         self.my_handler = main_handler
+        IniData().register_thread(self)
 
     def run(self):
         self.say_goodbye()
@@ -335,6 +337,7 @@ class MtzDataTransfer(QThread):
         super(MtzDataTransfer, self).__init__()
         self.cmd = cmd
         self.my_handler = main_handler
+        IniData().register_thread(self)
 
     def run(self):
         self.say_goodbye()
@@ -377,6 +380,7 @@ class PostRequestWithOutput(QThread):
         self.my_handler = main_handler
         self.number = None
         self.do_predict_n_report = do_pred_n_rept
+        data_init.register_thread(self)
 
     def run(self):
         if self.my_handler == None:
@@ -657,6 +661,7 @@ class HelpRequest(QThread):
     def __init__(self, main_obj):
         super(HelpRequest, self).__init__()
         self.runner_handler = main_obj
+        IniData().register_thread(self)
         self.lst_cmd = [
             "import",
             "generate_mask",

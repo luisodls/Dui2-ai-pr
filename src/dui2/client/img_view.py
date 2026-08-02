@@ -1669,5 +1669,6 @@ def main(par_def = None):
     uni_url = data_init.get_url()
     app = QApplication(sys.argv)
     m_obj = MainImgViewObject(parent = app)
-    sys.exit(app.exec_())
+
+    run_qapp(app)
 

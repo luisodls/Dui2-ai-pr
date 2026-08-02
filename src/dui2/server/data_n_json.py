@@ -250,7 +250,7 @@ def get_info_data(uni_cmd, cmd_dict, step_list):
                 new_line = None
                 while cloudrun_proc.poll() is None or new_line != '':
                     new_line = cloudrun_proc.stdout.readline()
-                    print("cloudrun new_line =", new_line[:-1])
+                    logging.info("cloudrun new_line =" + str(new_line[:-1]))
                     lst_line.append(new_line)
 
                 for out_line in lst_line:

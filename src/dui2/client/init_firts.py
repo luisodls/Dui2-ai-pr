@@ -83,6 +83,9 @@ class IniData(object):
 
         logging.info("\n win_exe =" + str(win_exe))
 
+        global active_threads
+        active_threads = []
+
     def set_tmp_dir(self, dir_path_in):
         global tmp_dir
         tmp_dir = dir_path_in
@@ -108,6 +111,39 @@ class IniData(object):
 
     def get_win_exe(self):
         return win_exe
+
+    def register_thread(self, thread):
+        global active_threads
+        active_threads.append(thread)
+        thread.finished.connect(lambda: self._forget_thread(thread))
+
+    def _forget_thread(self, thread):
+        try:
+            active_threads.remove(thread)
+
+        except ValueError:
+            pass
+
+    def quit_kill_all_threads(self, timeout_ms = 1200):
+        global active_threads
+        for thread in list(active_threads):
+            try:
+                if thread.isRunning():
+                    thread.requestInterruption()
+                    thread.quit()
+                    if not thread.wait(timeout_ms):
+                        logging.info(
+                            "Thread: " + str(thread) +
+                            " did not exit gracefully, terminating"
+                        )
+                        thread.terminate()
+                        thread.wait()
+
+            except RuntimeError:
+                # underlying C++ QThread object already deleted
+                logging.info("Thread already deleted (IniData sweep)")
+
+        active_threads = []
 
 
 if __name__ == "__main__":

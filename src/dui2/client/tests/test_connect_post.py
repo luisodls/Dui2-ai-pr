@@ -31,25 +31,26 @@ uni_url = 'http://127.0.0.1:45678/'
 
 if __name__ == "__main__":
 
-        new_tst = '''
-        full_cmd = {'nod_lst': [48], 'cmd_lst': ['split_node']}
+        #correct = '''
         full_cmd = {
-            'nod_lst': [0],
-            'cmd_lst': [
-                'dials.import input.template="/home/luiso/dif_dat/C2sum_5/C2sum_5_####.cbf.gz"'
-            ]
+            'nod_lst': [3], 'cmd_lst': ['dials.refine'], 'token': 'dummy_4_now'
         }
-        '''
+        #'''
 
+        wrong_token = '''
         full_cmd = {
-            'nod_lst': [0],
-            'cmd_lst': [
-                'dials.import /home/lui/dif_dat/x4w_g1/X4_wide_M1S4_2_*.cbf'
-            ]
+            'nod_lst': [3], 'cmd_lst': ['dials.refine'], 'token': 'dummy_never'
+        }
+        #'''
+
+        misspell_key_token = '''
+        full_cmd = {
+            'nod_lst': [3], 'cmd_lst': ['dials.refine'], 'tock': 'dummy_4_now'
         }
 
+        #'''
 
-
+        #full_cmd = {'nod_lst': [4], 'cmd_lst': ['run_predict_n_report'], 'token': 'dummy_4_now'}
 
         req_post = requests.post(uni_url, stream = True, data = full_cmd)
         while True:

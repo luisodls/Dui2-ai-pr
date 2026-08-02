@@ -158,5 +158,9 @@ def main():
         parent = None, domain = domain, port_num = port_num, url_opt = url_opt
     )
 
-    sys.exit(app.exec_())
+    if hasattr(app, "exec"):
+        sys.exit(app.exec())
+
+    else:
+        sys.exit(app.exec_())
 

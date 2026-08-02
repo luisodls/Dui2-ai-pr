@@ -24,6 +24,14 @@ copyright (c) CCP4 - DLS
 import os
 import sys
 
+def run_qapp(app):
+    if hasattr(app, "exec"):
+        sys.exit(app.exec())
+
+    else:
+        sys.exit(app.exec_())
+
+
 def is_webengine_functional(pyside_ver):
     # 1. Check if module is even importable
     try:
