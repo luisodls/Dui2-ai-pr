@@ -350,6 +350,9 @@ class ParamTree2Lineal(object):
         self.lst_obj = []
         self.deep_in_recurs(phl_obj_lst)
 
+        #print(phl_obj_lst)
+
+
     def __call__(self):
         return self.lst_obj
 

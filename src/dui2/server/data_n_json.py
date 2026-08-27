@@ -53,6 +53,7 @@ except (ImportError, ModuleNotFoundError):
 from dials.command_line.scale import phil_scope as phil_scope_scale
 from dials.command_line.symmetry import phil_scope as phil_scope_symmetry
 
+from dials.command_line.search_beam_position import phil_scope as phil_search_beam
 
 from dials.command_line.two_theta_refine import phil_scope as phil_scope_two_theta_refine
 
@@ -689,6 +690,7 @@ class BuildParamDictData(object):
         return self.lst_obj
 
     def deep_in_recurs(self, single_obj):
+
         if single_obj.name == "output":
             logging.info(" << output >> should be handled by DUI")
 
@@ -702,45 +704,54 @@ class BuildParamDictData(object):
                 "opt_lst"       :None,
                 "default"       :None
             }
-            if single_obj.type.phil_type == "bool":
-                param_info["type"] = "bool"
-                param_info["opt_lst"] = ["True", "False", "Auto"]
-                if str(single_obj.extract()) == "True":
-                    param_info["default"] = 0
+            try:
+                if single_obj.type == None:
+                    logging.info("found << single_obj.type == None >> ERROR")
+                    return None
 
-                elif str(single_obj.extract()) == "False":
-                    param_info["default"] = 1
+                elif single_obj.type.phil_type == "bool":
+                    param_info["type"] = "bool"
+                    param_info["opt_lst"] = ["True", "False", "Auto"]
+                    if str(single_obj.extract()) == "True":
+                        param_info["default"] = 0
+
+                    elif str(single_obj.extract()) == "False":
+                        param_info["default"] = 1
+
+                    else:
+                        param_info["default"] = 2
+
+                elif single_obj.type.phil_type == "choice":
+                    param_info["type"] = "choice"
+                    param_info["opt_lst"] = []
+                    param_info["default"] = len(single_obj.words)
+                    for num, opt in enumerate(single_obj.words):
+                        opt = str(opt)
+                        if opt[0] == "*":
+                            opt = opt[1:]
+                            param_info["default"] = num
+
+                        param_info["opt_lst"].append(opt)
 
                 else:
-                    param_info["default"] = 2
+                    param_info["type"] = "other(s)"
+                    tmp_str_default = str(single_obj.extract())
+                    try:
+                        tmp_str_default = tmp_str_default.replace(", ", ",")
 
-            elif single_obj.type.phil_type == "choice":
-                param_info["type"] = "choice"
-                param_info["opt_lst"] = []
-                param_info["default"] = len(single_obj.words)
-                for num, opt in enumerate(single_obj.words):
-                    opt = str(opt)
-                    if opt[0] == "*":
-                        opt = opt[1:]
-                        param_info["default"] = num
+                    except NameError:
+                        pass
 
-                    param_info["opt_lst"].append(opt)
+                    param_info["default"] = tmp_str_default
 
-            else:
-                param_info["type"] = "other(s)"
-                tmp_str_default = str(single_obj.extract())
-                try:
-                    tmp_str_default = tmp_str_default.replace(", ", ",")
+                    if self.nproc_2_auto and param_info["name"] == "nproc":
+                        param_info["default"] = "Auto"
 
-                except NameError:
-                    pass
+                return param_info
 
-                param_info["default"] = tmp_str_default
-
-                if self.nproc_2_auto and param_info["name"] == "nproc":
-                    param_info["default"] = "Auto"
-
-            return param_info
+            except AttributeError:
+                logging.info("Attribute Err Catch, None single_obj.type")
+                return None
 
         elif single_obj.is_scope:
             param_info = {
@@ -759,6 +770,9 @@ class BuildParamDictData(object):
             return param_info
 
         else:
+            logging.info(str(single_obj.name) +
+                " WARNING neither definition or scope")
+
             logging.info(str(single_obj.name) +
                 " WARNING neither definition or scope")
 
@@ -820,8 +834,9 @@ def get_param_list(cmd_str):
             "integrate_params"               :phil_scope_integrate.objects     ,
             "ssx_integrate_params"           :ssx_phil_scope_integrate.objects ,
             "symmetry_params"                :phil_scope_symmetry.objects      ,
+            "search_beam_position_params"    :phil_search_beam.objects         ,
             "two_theta_refine_params"        :phil_scope_two_theta_refine.objects ,
-            "cosym_params"                   :phil_scope_cosym.objects ,
+            "cosym_params"                   :phil_scope_cosym.objects         ,
             "scale_params"                   :phil_scope_scale.objects         ,
             "combine_experiments_params"     :phil_scope_combine_params.objects,
         }
