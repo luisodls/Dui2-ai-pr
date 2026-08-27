@@ -704,54 +704,58 @@ class BuildParamDictData(object):
                 "opt_lst"       :None,
                 "default"       :None
             }
+            if single_obj.type is None:
+                logging.info("found << single_obj.type is None >> ERROR")
+                return None
+
             try:
-                if single_obj.type == None:
-                    logging.info("found << single_obj.type == None >> ERROR")
-                    return None
-
-                elif single_obj.type.phil_type == "bool":
-                    param_info["type"] = "bool"
-                    param_info["opt_lst"] = ["True", "False", "Auto"]
-                    if str(single_obj.extract()) == "True":
-                        param_info["default"] = 0
-
-                    elif str(single_obj.extract()) == "False":
-                        param_info["default"] = 1
-
-                    else:
-                        param_info["default"] = 2
-
-                elif single_obj.type.phil_type == "choice":
-                    param_info["type"] = "choice"
-                    param_info["opt_lst"] = []
-                    param_info["default"] = len(single_obj.words)
-                    for num, opt in enumerate(single_obj.words):
-                        opt = str(opt)
-                        if opt[0] == "*":
-                            opt = opt[1:]
-                            param_info["default"] = num
-
-                        param_info["opt_lst"].append(opt)
-
-                else:
-                    param_info["type"] = "other(s)"
-                    tmp_str_default = str(single_obj.extract())
-                    try:
-                        tmp_str_default = tmp_str_default.replace(", ", ",")
-
-                    except NameError:
-                        pass
-
-                    param_info["default"] = tmp_str_default
-
-                    if self.nproc_2_auto and param_info["name"] == "nproc":
-                        param_info["default"] = "Auto"
-
-                return param_info
+                phil_type = single_obj.type.phil_type
 
             except AttributeError:
-                logging.info("Attribute Err Catch, None single_obj.type")
+                logging.info(
+                    "Attribute Err Catch, single_obj.type has no phil_type"
+                )
                 return None
+
+            if phil_type == "bool":
+                param_info["type"] = "bool"
+                param_info["opt_lst"] = ["True", "False", "Auto"]
+                if str(single_obj.extract()) == "True":
+                    param_info["default"] = 0
+
+                elif str(single_obj.extract()) == "False":
+                    param_info["default"] = 1
+
+                else:
+                    param_info["default"] = 2
+
+            elif phil_type == "choice":
+                param_info["type"] = "choice"
+                param_info["opt_lst"] = []
+                param_info["default"] = len(single_obj.words)
+                for num, opt in enumerate(single_obj.words):
+                    opt = str(opt)
+                    if opt[0] == "*":
+                        opt = opt[1:]
+                        param_info["default"] = num
+
+                    param_info["opt_lst"].append(opt)
+
+            else:
+                param_info["type"] = "other(s)"
+                tmp_str_default = str(single_obj.extract())
+                try:
+                    tmp_str_default = tmp_str_default.replace(", ", ",")
+
+                except NameError:
+                    pass
+
+                param_info["default"] = tmp_str_default
+
+                if self.nproc_2_auto and param_info["name"] == "nproc":
+                    param_info["default"] = "Auto"
+
+            return param_info
 
         elif single_obj.is_scope:
             param_info = {
@@ -770,9 +774,6 @@ class BuildParamDictData(object):
             return param_info
 
         else:
-            logging.info(str(single_obj.name) +
-                " WARNING neither definition or scope")
-
             logging.info(str(single_obj.name) +
                 " WARNING neither definition or scope")
 

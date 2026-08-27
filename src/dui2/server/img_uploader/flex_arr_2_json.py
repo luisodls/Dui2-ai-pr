@@ -53,7 +53,15 @@ def get_height_with_n_i23_multip(ExpLst):
 def get_template_info(exp_path, img_num):
     try:
         experiments = get_experiments(exp_path)
-        rot_axs = experiments.goniometers()[0].get_rotation_axis()
+
+        gonio_lst = experiments.goniometers()
+        if len(gonio_lst) > 0 and gonio_lst[0] is not None:
+            rot_axs = gonio_lst[0].get_rotation_axis()
+
+        else:
+            rot_axs = (-1, -1, -1)
+            logging.info("no goniometer (stills?), using sentinel rot_axs")
+
         max_img_num = 0
         for single_sweep in experiments.imagesets():
             max_img_num += len(single_sweep.indices())
