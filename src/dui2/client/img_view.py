@@ -119,6 +119,7 @@ class ImgGraphicsScene(QGraphicsScene):
         self.curr_pixmap = None
         self.my_mask_pix_map = None
 
+        self.x_line_size = 20.0
         self.overlay_pen1 = QPen(
             Qt.white, 0.5, Qt.SolidLine,
             Qt.RoundCap, Qt.RoundJoin
@@ -190,7 +191,6 @@ class ImgGraphicsScene(QGraphicsScene):
     def draw_beam_center(self):
         x_bc = self.beam_xy_pair[0]
         y_bc = self.beam_xy_pair[1]
-        self.x_line_size = 20.0
         self.addLine(
             x_bc, y_bc - self.x_line_size,
             x_bc, y_bc + self.x_line_size, self.overlay_pen1
