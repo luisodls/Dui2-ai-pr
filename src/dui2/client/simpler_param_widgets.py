@@ -1670,7 +1670,6 @@ class SymmetrySimplerParamTab(SimpleParamTab):
         self.clearLayout(self.main_v_layout)
         self.build_pars()
 
-#################################################################################### NEW tmp divider 1
 
 class SearchBeamSimplerParamTab(SimpleParamTab):
     """
@@ -1707,8 +1706,6 @@ class SearchBeamSimplerParamTab(SimpleParamTab):
         self.clearLayout(self.main_v_layout)
         self.build_pars()
 
-
-#################################################################################### NEW tmp divider 2
 
 class CosymSimplerParamTab(SimpleParamTab):
     """

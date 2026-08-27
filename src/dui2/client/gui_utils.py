@@ -168,7 +168,6 @@ widgets_defs = {
             "split_experiments", "optional"
         ]
     },
-
     "search_beam_position" : {
         "tooltip"       : "dials.search_beam_position ...",
         "icon"          : "resources/search_beam.png",
@@ -179,9 +178,6 @@ widgets_defs = {
             "split_experiments", "optional"
         ]
     },
-
-
-
     "cosym" : {
         "tooltip"       : "dials.cosym ...",
         "icon"          : "resources/cosym.png",

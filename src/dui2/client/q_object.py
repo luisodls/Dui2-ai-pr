@@ -331,16 +331,6 @@ class MainObject(QObject):
             self.window.SymmetryAdvancedScrollArea
         )
 
-
-        '''
-        self.param_widgets["search_beam_position"]["main_page"] = self.window.SearchBeamPositionPage
-
-            SearchBeamSimpleScrollArea
-
-            SrchBeamSearchLayout
-            SearchBeamAdvancedScrollArea
-
-        '''
         search_beam_simpl_widg = SearchBeamSimplerParamTab()
         search_beam_simpl_widg.item_changed.connect(self.item_param_changed)
         self.window.SearchBeamSimpleScrollArea.setWidget(search_beam_simpl_widg)
@@ -357,9 +347,6 @@ class MainObject(QObject):
         search_beam_advanced_parameters.set_scroll_parent(
             self.window.SearchBeamAdvancedScrollArea
         )
-
-
-        ############################################################################################
 
         cosym_simpl_widg = CosymSimplerParamTab()
         cosym_simpl_widg.item_changed.connect(self.item_param_changed)
